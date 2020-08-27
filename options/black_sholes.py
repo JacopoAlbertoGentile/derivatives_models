@@ -41,19 +41,19 @@ class BlackScholes(object):
             deltaBS=st.norm.cdf(-d1,0,1)
             return(deltaBS)
 
-    def Vega(self,vol):
+    def vega(self,vol):
         d1 = (m.log(self.underlying / self.strike) + (self.rate + 0.5 * vol ** 2) * self.T) / (
                     vol * m.sqrt(self.T))
         d2 = d1 - (vol) * m.sqrt(self.T)
-        vega=self.underlying*st.norm.cdf(d1,0,1)*m.sqrt(self.T)
-        return(vega)
+        vega_value=self.underlying*st.norm.cdf(d1,0,1)*m.sqrt(self.T)
+        return vega_value
 
-    def implied_vol(self,Quote,vol_est):
-        print((self.price(vol_est),self.delta(vol_est),self.Vega(vol_est)))
+    def implied_vol(self,option_mkt_price,vol_est):
+        print((self.price(vol_est),self.delta(vol_est),self.vega(vol_est)))
         i=1
         while(i<=100):
-            vol_est=vol_est-((self.price(vol_est)-Quote)/self.Vega(vol_est))
-            if abs(self.price(vol_est)-Quote) <= 0.0001:
+            vol_est=vol_est-((self.price(vol_est)-option_mkt_price)/self.vega(vol_est))
+            if abs(self.price(vol_est)-option_mkt_price) <= 0.0001:
                 print("Numbers of attemps:",i)
                 print("Implied_Vol:",vol_est)
                 return vol_est
@@ -61,7 +61,7 @@ class BlackScholes(object):
                 i=i+1
 
     def volga(self,vol):
-        Vega=self.Vega(vol)
+        Vega=self.vega(vol)
         d1 = (m.log(self.underlying / self.strike) + (self.rate + 0.5 * vol ** 2) * self.T) / (
                     vol * m.sqrt(self.T))
         d2 = d1 - (vol) * m.sqrt(self.T)
