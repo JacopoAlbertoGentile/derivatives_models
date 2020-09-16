@@ -12,6 +12,7 @@ def call_payoff(strike, premium,underlying_price):
         else:
             return -payoff
 
+
 def put_payoff(strike, premium, underlying_price):
     if premium > 0:
         payoff = (strike - underlying_price) - premium
