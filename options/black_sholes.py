@@ -65,6 +65,19 @@ class BlackScholes(object):
                 return vol_est
             else:
                 i = i + 1
+                
+                
+    def implied_vol_breakeven(self, option_mkt_price, vol_est):
+        print((self.price(vol_est), self.delta(vol_est), self.vega(vol_est)))
+        i = 1
+        while (i <= 100):
+            vol_est = vol_est - ((self.price(vol_est) - option_mkt_price) / self.vega(vol_est))
+            if abs(self.price(vol_est) - 2 * option_mkt_price) <= 0.0001:
+                print("Numbers of attemps:", i)
+                print("Implied_Vol:", vol_est)
+                return vol_est
+            else:
+                i = i + 1
 
     def volga(self, vol):
         Vega = self.vega(vol)
