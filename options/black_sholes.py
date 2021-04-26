@@ -5,16 +5,16 @@ import scipy.stats as st
 
 
 class BlackScholes(object):
-    def __init__(self, strike, underlying, rate, expiry, type, vol=None, end_date = None):
+    def __init__(self, strike, underlying, rate, expiry, type, vol=None, start_date = None):
         self.strike = strike
         self.underlying = underlying
         self.vol = vol
         self.rate = rate
         self.type = type
-        if end_date is None:
+        if start_date is None:
             today = dt.datetime.today()
         else:
-            today = dt.datetime.strptime(end_date, "%Y-%m-%d")
+            today = dt.datetime.strptime(start_date, "%Y-%m-%d")
         T = dt.datetime.strptime(expiry, "%Y-%m-%d")
         T = (T - today).days / 252
         self.T = T
