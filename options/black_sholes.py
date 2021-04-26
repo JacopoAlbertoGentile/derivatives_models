@@ -5,14 +5,17 @@ import scipy.stats as st
 
 
 class BlackScholes(object):
-    def __init__(self, strike, underlying, rate, T, type, vol=None):
+    def __init__(self, strike, underlying, rate, expiry, type, vol=None, end_date = None):
         self.strike = strike
         self.underlying = underlying
         self.vol = vol
         self.rate = rate
         self.type = type
-        today = dt.datetime.today()
-        T = dt.datetime.strptime(T, "%Y-%m-%d")
+        if end_date is None:
+            today = dt.datetime.today()
+        else:
+            today = dt.datetime.strptime(end_date, "%Y-%m-%d")
+        T = dt.datetime.strptime(expiry, "%Y-%m-%d")
         T = (T - today).days / 252
         self.T = T
         self.discount_factor = m.exp(-self.rate * self.T)
@@ -71,8 +74,8 @@ class BlackScholes(object):
         print((self.price(vol_est), self.delta(vol_est), self.vega(vol_est)))
         i = 1
         while (i <= 100):
-            vol_est = vol_est - ((self.price(vol_est) - option_mkt_price) / self.vega(vol_est))
-            if abs(self.price(vol_est) - 2 * option_mkt_price) <= 0.0001:
+            vol_est = vol_est - ((self.price(vol_est) - 2 * option_mkt_price) / self.vega(vol_est))
+            if abs(self.price(vol_est) - (2 * option_mkt_price)) <= 0.0001:
                 print("Numbers of attemps:", i)
                 print("Implied_Vol:", vol_est)
                 return vol_est
@@ -100,6 +103,4 @@ class BlackScholes(object):
         d2 = d1 - (vol) * m.sqrt(self.T)
         bs_theta = - (self.underlying * st.norm.pdf(d1) * vol * 0.5 / m.sqrt(self.T)) - self.rate * self.strike * self.discount_factor * st.norm.cdf(d2, 0, 1)
         return bs_theta
-
-
 
